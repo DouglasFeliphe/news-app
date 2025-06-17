@@ -20,6 +20,7 @@ import {
   EmptyContainer,
   EmptyText,
 } from './styles';
+import { myTheme } from '@/theme/theme';
 
 export default function HomeScreen() {
   const [news, setNews] = useState<News[]>([]);
@@ -35,6 +36,7 @@ export default function HomeScreen() {
       setLoading(true);
       try {
         const response = await getNews(category);
+        console.log('response :', response);
         if (mounted) {
           setNews(response.articles);
         }
@@ -165,8 +167,8 @@ export default function HomeScreen() {
             <RefreshControl
               refreshing={refreshing}
               onRefresh={handleRefresh}
-              colors={['#10b981']}
-              tintColor="#10b981"
+              colors={[myTheme.colors.primary, myTheme.colors.tertiary]}
+              tintColor={myTheme.colors.primary}
             />
           }
           onEndReached={handleLoadMore}
