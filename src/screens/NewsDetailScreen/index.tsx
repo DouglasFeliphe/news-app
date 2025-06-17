@@ -47,8 +47,12 @@ export default function NewsDetailScreen({ route }: NewsDetailScreenProps) {
   return (
     <Container>
       <Header showBackButton title="Detalhes" />
-
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={{
+          flexGrow: 1,
+        }}
+        showsVerticalScrollIndicator={false}
+      >
         <ContentContainer>
           {news.urlToImage && (
             <ImageContainer>
