@@ -132,7 +132,18 @@ export default function HomeScreen() {
                 <HeroTitle>Notícias em Destaque</HeroTitle>
                 <HeroSubtitle>Descubra as últimas notícias</HeroSubtitle>
                 <HeroMeta>
-                  <Ionicons name="flash" size={16} color="#06b6d4" />
+                  <MotiView
+                    from={{ opacity: 0, translateY: 5 }}
+                    animate={{ opacity: 1, translateY: 0 }}
+                    transition={{
+                      type: 'timing',
+                      duration: 1000,
+                      loop: true,
+                      repeatReverse: true,
+                    }}
+                  >
+                    <Ionicons name="flash" size={16} color="#06b6d4" />
+                  </MotiView>
                   <HeroMetaText>Atualizado em tempo real</HeroMetaText>
                 </HeroMeta>
               </HeroSection>
