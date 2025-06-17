@@ -3,7 +3,14 @@ import Header from '@/components/Header';
 import type { News } from '@/types/News';
 import { formatDate } from '@/utils/dateUtils';
 import { Ionicons } from '@expo/vector-icons';
-import { Dimensions, Linking, ScrollView } from 'react-native';
+import {
+  Dimensions,
+  Linking,
+  ScrollView,
+  ActivityIndicator,
+  Alert,
+} from 'react-native';
+import { useState } from 'react';
 import {
   Container,
   Content,
@@ -26,6 +33,7 @@ import {
   Title,
   TitleContainer,
 } from './styles';
+import Toast from 'react-native-toast-message';
 
 const { width } = Dimensions.get('window');
 
@@ -39,9 +47,31 @@ interface NewsDetailScreenProps {
 
 export default function NewsDetailScreen({ route }: NewsDetailScreenProps) {
   const { news } = route.params;
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleReadFull = () => {
-    Linking.openURL(news.url);
+  const handleReadFull = async () => {
+    try {
+      setIsLoading(true);
+      const supported = await Linking.canOpenURL(news.url);
+
+      if (supported) {
+        await Linking.openURL(news.url);
+      } else {
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: 'Falha ao abrir a notícia. Verifique a URL.',
+        });
+      }
+    } catch (error) {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Falha ao abrir a notícia. Tente novamente mais tarde.',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -96,10 +126,22 @@ export default function NewsDetailScreen({ route }: NewsDetailScreenProps) {
             <Content>{news.content}</Content>
 
             <FooterContainer>
-              <ReadFullButton onPress={handleReadFull} activeOpacity={0.8}>
-                <Ionicons name="flash" size={16} color="white" />
-                <ReadFullButtonText>Ler notícia completa</ReadFullButtonText>
-                <Ionicons name="open-outline" size={16} color="white" />
+              <ReadFullButton
+                onPress={handleReadFull}
+                activeOpacity={0.8}
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <ActivityIndicator color="white" size="small" />
+                ) : (
+                  <>
+                    <Ionicons name="flash" size={16} color="white" />
+                    <ReadFullButtonText>
+                      Ler notícia completa
+                    </ReadFullButtonText>
+                    <Ionicons name="open-outline" size={16} color="white" />
+                  </>
+                )}
               </ReadFullButton>
 
               <SourceInfo>
