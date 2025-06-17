@@ -7,6 +7,7 @@ import { useToast } from '@/hooks/use-toast';
 import type { News } from '../../types/News';
 import { getNewsById } from '../../services/api';
 import { FavoriteButtonActive, FavoriteButtonInactive } from './styles';
+import { myTheme } from '@/theme/theme';
 
 interface FavoriteButtonProps {
   newsId: string;
@@ -65,15 +66,18 @@ export default function FavoriteButton({
         const updatedFavorites = favoritesArray.filter(
           (fav) => fav.id !== newsId
         );
+
         await AsyncStorage.setItem(
           'favorites',
           JSON.stringify(updatedFavorites)
         );
+
         setIsFavorite(false);
 
         if (onRemove) {
           onRemove(newsId);
         }
+
         showToast(
           'success',
           'Removido dos favoritos',
@@ -87,7 +91,9 @@ export default function FavoriteButton({
             'favorites',
             JSON.stringify(updatedFavorites)
           );
+
           setIsFavorite(true);
+
           showToast(
             'success',
             'Adicionado aos favoritos',
@@ -111,7 +117,7 @@ export default function FavoriteButton({
         <Ionicons
           name={isFavorite ? 'heart' : 'heart-outline'}
           size={16}
-          color={isFavorite ? '#f59e0b' : '#64748b'}
+          color={isFavorite ? myTheme.colors.secondary : '#64748b'}
         />
       </ButtonComponent>
     </Animated.View>

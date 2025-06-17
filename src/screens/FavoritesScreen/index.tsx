@@ -23,7 +23,7 @@ const HeroSection = styled.View`
 const HeroTitle = styled.Text`
   font-size: ${({ theme }) => theme.fontSize.xxxl}px;
   font-weight: bold;
-  color: ${({ theme }) => theme.colors.warning};
+  color: ${({ theme }) => theme.colors.secondary};
   text-align: center;
   margin-bottom: ${({ theme }) => theme.spacing.sm}px;
 `;
