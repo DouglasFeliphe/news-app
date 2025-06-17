@@ -11,7 +11,10 @@ export const myTheme = {
     textSecondary: '#cbd5e1',
     textMuted: '#64748b',
     border: 'rgba(148, 163, 184, 0.1)',
+    backgroundSecondary: '#1e293b',
     backgroundTertiary: '#0f172a',
+    overlay: 'rgba(0, 0, 0, 0.5)',
+    white: '#ffffff',
   },
   gradients: {
     primary: ['#10b981', '#14b8a6', '#06b6d4'],
