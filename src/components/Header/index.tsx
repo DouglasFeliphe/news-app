@@ -9,12 +9,13 @@ import {
   HomeButton,
   LogoContainer,
   LogoIconContainer,
-  LogoText,
+  HeaderTitle,
   NavButtonText,
   NavContainer,
   SparkleIcon,
 } from './styles';
 import { myTheme } from '@/theme/theme';
+import { MotiView } from 'moti';
 
 interface HeaderProps {
   showBackButton?: boolean;
@@ -30,18 +31,43 @@ export default function Header({ showBackButton = false, title }: HeaderProps) {
         {showBackButton ? (
           <TouchableOpacity
             onPress={() => navigation.goBack()}
-            style={{ flexDirection: 'row', alignItems: 'center' }}
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              paddingVertical: 8,
+            }}
           >
-            <Ionicons name="arrow-back" size={24} color="#10b981" />
-            <LogoText style={{ marginLeft: 8 }}>{title || 'Voltar'}</LogoText>
+            <Ionicons
+              name="arrow-back"
+              size={24}
+              color={myTheme.colors.primary}
+            />
+            <HeaderTitle style={{ marginLeft: 8 }}>
+              {title || 'Voltar'}
+            </HeaderTitle>
           </TouchableOpacity>
         ) : (
           <LogoContainer>
             <LogoIconContainer>
-              <Ionicons name="newspaper" size={32} color="#10b981" />
-              <SparkleIcon name="flash" size={16} color="#eab308" />
+              <Ionicons
+                name="newspaper"
+                size={32}
+                color={myTheme.colors.primary}
+              />
+              <MotiView
+                from={{ opacity: 0, translateY: 20 }}
+                animate={{ opacity: 1, translateY: 0 }}
+                transition={{
+                  type: 'timing',
+                  duration: 1000,
+                  loop: true,
+                  repeatReverse: true,
+                }}
+              >
+                <SparkleIcon name="flash" size={16} color="#eab308" />
+              </MotiView>
             </LogoIconContainer>
-            <LogoText>Portal de Notícias</LogoText>
+            <HeaderTitle>Portal de Notícias</HeaderTitle>
           </LogoContainer>
         )}
 
