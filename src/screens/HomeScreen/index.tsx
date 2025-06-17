@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FlatList, RefreshControl } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { MotiView } from 'moti';
 import Header from '@/components/Header';
 import SearchBar from '@/components/SearchBar';
 import CategoryFilter from '@/components/CategoryFilter';
@@ -27,20 +28,31 @@ export default function HomeScreen() {
   const [category, setCategory] = useState<string | undefined>();
 
   useEffect(() => {
-    fetchNews();
-  }, [category]);
+    let mounted = true;
 
-  const fetchNews = async () => {
-    setLoading(true);
-    try {
-      const response = await getNews(category);
-      setNews(response.articles);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    console.log(' rendered:');
+    const fetchNews = async () => {
+      setLoading(true);
+      try {
+        const response = await getNews(category);
+        if (mounted) {
+          setNews(response.articles);
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        if (mounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchNews();
+
+    return () => {
+      mounted = false;
+    };
+  }, [category]);
 
   const handleSearch = (query: string) => {
     // Implement search functionality
@@ -52,7 +64,12 @@ export default function HomeScreen() {
 
   const handleRefresh = async () => {
     setRefreshing(true);
-    await fetchNews();
+    try {
+      const response = await getNews(category);
+      setNews(response.articles);
+    } catch (error) {
+      console.error(error);
+    }
     setRefreshing(false);
   };
 
@@ -60,7 +77,23 @@ export default function HomeScreen() {
     // Implement load more functionality
   };
 
-  const renderNewsItem = ({ item }: { item: News }) => <NewsCard news={item} />;
+  const renderNewsItem = ({ item, index }: { item: News; index: number }) => (
+    <MotiView
+      from={{ opacity: 0, translateY: 20 }}
+      animate={{ opacity: 1, translateY: 0 }}
+      transition={{
+        type: 'timing',
+        duration: 500,
+        delay: index * 50,
+      }}
+      exitTransition={{
+        type: 'timing',
+        duration: 400,
+      }}
+    >
+      <NewsCard news={item} />
+    </MotiView>
+  );
 
   const renderEmpty = () => (
     <EmptyContainer>
@@ -73,7 +106,13 @@ export default function HomeScreen() {
     return (
       <Container>
         <Header />
-        <LoadingSpinner text="Carregando notícias..." />
+        <MotiView
+          from={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ type: 'timing', duration: 500 }}
+        >
+          <LoadingSpinner text="Carregando notícias..." />
+        </MotiView>
       </Container>
     );
   }
@@ -81,11 +120,14 @@ export default function HomeScreen() {
   return (
     <Container>
       <Header />
-
       <NewsGrid>
         <FlatList
           ListHeaderComponent={() => (
-            <React.Fragment>
+            <MotiView
+              from={{ opacity: 0, translateY: -20 }}
+              animate={{ opacity: 1, translateY: 0 }}
+              transition={{ type: 'timing', duration: 600 }}
+            >
               <HeroSection>
                 <HeroTitle>Notícias em Destaque</HeroTitle>
                 <HeroSubtitle>Descubra as últimas notícias</HeroSubtitle>
@@ -101,7 +143,7 @@ export default function HomeScreen() {
                 selectedCategory={category}
                 onCategoryChange={handleCategoryChange}
               />
-            </React.Fragment>
+            </MotiView>
           )}
           data={news}
           renderItem={renderNewsItem}
