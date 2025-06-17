@@ -8,8 +8,8 @@ export const FavoriteContainer = styled(TouchableOpacity)`
 `;
 
 export const FavoriteButtonActive = styled(FavoriteContainer)`
-  background-color: ${({ theme }) => theme.colors.secondary}30;
-  border-color: ${({ theme }) => theme.colors.secondary}50;
+  background-color: ${({ theme }) => theme.colors.error}30;
+  border-color: ${({ theme }) => theme.colors.error}30;
 `;
 
 export const FavoriteButtonInactive = styled(FavoriteContainer)`

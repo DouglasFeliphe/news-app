@@ -117,7 +117,7 @@ export default function FavoriteButton({
         <Ionicons
           name={isFavorite ? 'heart' : 'heart-outline'}
           size={16}
-          color={isFavorite ? myTheme.colors.secondary : '#64748b'}
+          color={isFavorite ? myTheme.colors.error : '#64748b'}
         />
       </ButtonComponent>
     </Animated.View>
