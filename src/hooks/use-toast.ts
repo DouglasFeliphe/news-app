@@ -10,7 +10,7 @@ export const useToast = () => {
       type,
       text1: message,
       text2: description,
-      position: 'bottom',
+      // position: 'bottom',
       visibilityTime: 3000,
     });
   };
