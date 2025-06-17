@@ -107,12 +107,11 @@ export const Content = styled.Text`
 `;
 
 export const FooterContainer = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
   align-items: center;
   padding-top: ${({ theme }) => theme.spacing.lg}px;
   border-top-width: 1px;
   border-top-color: ${({ theme }) => theme.colors.border};
+  gap: ${({ theme }) => theme.spacing.md}px;
 `;
 
 export const ReadFullButton = styled(TouchableOpacity)`
