@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { TouchableOpacity, Animated } from 'react-native';
+import { TouchableOpacity } from 'react-native';
+import { MotiView } from 'moti';
 
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -21,7 +22,6 @@ export default function FavoriteButton({
   onRemove,
 }: FavoriteButtonProps) {
   const [isFavorite, setIsFavorite] = useState(false);
-  const [scaleAnim] = useState(new Animated.Value(1));
   const { showToast } = useToast();
 
   useEffect(() => {
@@ -40,24 +40,7 @@ export default function FavoriteButton({
     }
   };
 
-  const animateButton = () => {
-    Animated.sequence([
-      Animated.timing(scaleAnim, {
-        toValue: 1.2,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-      Animated.timing(scaleAnim, {
-        toValue: 1,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  };
-
   const toggleFavorite = async () => {
-    animateButton();
-
     try {
       const favorites = await AsyncStorage.getItem('favorites');
       const favoritesArray: News[] = favorites ? JSON.parse(favorites) : [];
@@ -112,14 +95,23 @@ export default function FavoriteButton({
     : FavoriteButtonInactive;
 
   return (
-    <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+    <MotiView
+      animate={{
+        scale: [1, 1.2, 1],
+      }}
+      transition={{
+        type: 'timing',
+        duration: 200,
+        loop: false,
+      }}
+    >
       <ButtonComponent onPress={toggleFavorite} activeOpacity={0.7}>
         <Ionicons
-          name={isFavorite ? 'heart' : 'heart-outline'}
           size={16}
+          name={isFavorite ? 'heart' : 'heart-outline'}
           color={isFavorite ? myTheme.colors.error : '#64748b'}
         />
       </ButtonComponent>
-    </Animated.View>
+    </MotiView>
   );
 }
