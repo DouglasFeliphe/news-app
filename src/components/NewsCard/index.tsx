@@ -66,23 +66,8 @@ export default function NewsCard({
             <Ionicons name="image" size={32} color="#64748b" />
           </ImageContainer>
         )}
-        <MotiView
-          from={{
-            scale: 0.5,
-            opacity: 0.6,
-          }}
-          animate={{
-            scale: 1.1,
-            opacity: 1,
-          }}
-          transition={{
-            type: 'timing',
-            duration: 800,
-            loop: true,
-          }}
-        >
-          <SparkleIcon name="sparkles" size={16} />
-        </MotiView>
+
+        <SparkleIcon name="sparkles" size={16} />
       </ImageContainer>
 
       <ContentContainer>
