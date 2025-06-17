@@ -43,7 +43,6 @@ const EmptyContainer = styled.View`
   flex: 1;
   justify-content: center;
   align-items: center;
-  padding: ${({ theme }) => theme.spacing.xxl}px;
 `;
 
 const EmptyCard = styled.View`
