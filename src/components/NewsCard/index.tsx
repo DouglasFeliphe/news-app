@@ -2,6 +2,7 @@
 
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { MotiView } from 'moti';
 import React, { useState } from 'react';
 import { Dimensions } from 'react-native';
 import type { News } from '@/types/News';
@@ -65,7 +66,23 @@ export default function NewsCard({
             <Ionicons name="image" size={32} color="#64748b" />
           </ImageContainer>
         )}
-        <SparkleIcon name="sparkles" size={16} />
+        <MotiView
+          from={{
+            scale: 0.5,
+            opacity: 0.6,
+          }}
+          animate={{
+            scale: 1.1,
+            opacity: 1,
+          }}
+          transition={{
+            type: 'timing',
+            duration: 800,
+            loop: true,
+          }}
+        >
+          <SparkleIcon name="sparkles" size={16} />
+        </MotiView>
       </ImageContainer>
 
       <ContentContainer>
