@@ -2,17 +2,22 @@ import styled from 'styled-components/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native';
-import { theme } from '@/styles/theme';
+import { myTheme } from '@/theme/theme';
 
 export const HeaderContainer = styled(SafeAreaView)`
   background-color: ${({ theme }) => theme.colors.surface};
   border-bottom-width: 1px;
   border-bottom-color: ${({ theme }) => theme.colors.border};
+  shadow-color: #000;
+  shadow-offset: 0px 4px;
+  shadow-opacity: 0.35;
+  shadow-radius: 5px;
+  elevation: 12;
 `;
-
 export const HeaderContent = styled.View`
   gap: ${({ theme }) => theme.spacing.md}px;
-  padding: ${({ theme }) => theme.spacing.md}px;
+  padding-left: ${({ theme }) => theme.spacing.md}px;
+  padding-top: ${({ theme }) => theme.spacing.md}px;
 `;
 
 export const LogoContainer = styled.View`
@@ -53,17 +58,21 @@ export const NavButton = styled(TouchableOpacity)`
 `;
 
 export const HomeButton = styled(NavButton)`
-  background-color: rgba(16, 185, 129, 0.2);
-  border-color: rgba(16, 185, 129, 0.3);
+  background-color: ${({ theme }) => theme.colors.primary}30;
+  border-color: ${({ theme }) => theme.colors.primary};
 `;
 
 export const FavoritesButton = styled(NavButton)`
-  background-color: rgba(245, 158, 11, 0.2);
-  border-color: rgba(245, 158, 11, 0.3);
+  background-color: ${({ theme }) => theme.colors.secondary}30;
+  border-color: ${({ theme }) => theme.colors.secondary};
 `;
 
-export const NavButtonText = styled.Text`
-  color: ${({ theme }) => theme.colors.text};
+type NavButtonTextProps = {
+  color?: keyof typeof myTheme.colors;
+};
+
+export const NavButtonText = styled.Text<NavButtonTextProps>`
+  color: ${({ color, theme }) => theme.colors[color ?? 'text']};
   font-weight: 600;
   margin-left: ${({ theme }) => theme.spacing.xs}px;
 `;

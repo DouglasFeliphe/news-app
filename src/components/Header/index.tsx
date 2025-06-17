@@ -14,7 +14,7 @@ import {
   NavContainer,
   SparkleIcon,
 } from './styles';
-import { theme } from '@/styles/theme';
+import { myTheme } from '@/theme/theme';
 
 interface HeaderProps {
   showBackButton?: boolean;
@@ -48,14 +48,14 @@ export default function Header({ showBackButton = false, title }: HeaderProps) {
         {!showBackButton && (
           <NavContainer horizontal>
             <HomeButton onPress={() => navigation.navigate('Home' as never)}>
-              <Ionicons name="home" size={16} color="#f8fafc" />
-              <NavButtonText>Início</NavButtonText>
+              <Ionicons name="home" size={16} color={myTheme.colors.text} />
+              <NavButtonText color="primary">Início</NavButtonText>
             </HomeButton>
             <FavoritesButton
               onPress={() => navigation.navigate('Favorites' as never)}
             >
-              <Ionicons name="heart" size={16} color="#f8fafc" />
-              <NavButtonText>Favoritos</NavButtonText>
+              <Ionicons name="heart" size={16} color={myTheme.colors.error} />
+              <NavButtonText color="secondary">Favoritos</NavButtonText>
             </FavoritesButton>
           </NavContainer>
         )}
