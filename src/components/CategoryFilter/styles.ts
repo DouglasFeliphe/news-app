@@ -25,6 +25,7 @@ export const FilterButtonText = styled.Text`
 `;
 
 export const ModalContainer = styled.View`
+  /* border: 2px solid red; */
   flex: 1;
   justify-content: center;
   align-items: center;
