@@ -9,12 +9,12 @@ export const Container = styled.View`
 
 export const ContentContainer = styled.View`
   background-color: ${({ theme }) => theme.colors.surface};
-  margin: ${({ theme }) => theme.spacing.md}px;
-  border-radius: ${({ theme }) => theme.borderRadius.xl}px;
-  border-width: 1px;
-  border-color: ${({ theme }) => theme.colors.border};
-  ${({ theme }) => theme.shadows.large};
-  overflow: hidden;
+  /* margin: ${({ theme }) => theme.spacing.md}px; */
+  /* border-radius: ${({ theme }) => theme.borderRadius.xl}px; */
+  /* border-width: 1px; */
+  /* border-color: ${({ theme }) => theme.colors.border}; */
+  /* ${({ theme }) => theme.shadows.large}; */
+  /* overflow: hidden; */
 `;
 
 export const ImageContainer = styled.View`
