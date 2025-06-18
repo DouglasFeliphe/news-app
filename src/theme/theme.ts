@@ -3,7 +3,7 @@ export const myTheme = {
     background: '#0f172a',
     surface: '#1e293b',
     surfaceLight: 'rgba(226, 232, 240, 0.1)',
-    primary: '#10b981',
+    primary: '#8b5cf6',
     secondary: '#f59e0b',
     tertiary: '#06b6d4',
     error: '#ef4444',
