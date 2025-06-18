@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { News } from '@/types/News';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // import { NEWS_API_KEY } from '@env';
 
 const api = axios.create({
@@ -36,7 +37,7 @@ export async function getNews(
     const params = {
       country: 'us',
       // language: 'pt',
-      pageSize: 5,
+      pageSize: 10,
       page,
       ...(category !== 'all' ? { category } : {}),
     };
@@ -47,8 +48,11 @@ export async function getNews(
 
     console.table('response :', response.data);
 
+    // Add unique IDs to each article
     const articles = response.data.articles.map((article, index) => ({
-      id: `${article.publishedAt}-${index}`,
+      id: article.url
+        ? encodeURIComponent(article.url)
+        : `${article.publishedAt}-${index}`,
       title: article.title,
       description: article.description || '',
       content: article.content || '',
@@ -77,6 +81,23 @@ export async function getNews(
   }
 }
 
+export async function getNewsById(id: string): Promise<News | null> {
+  try {
+    // Since NewsAPI doesn't provide a single article endpoint,
+    // we'll get it from localStorage if it exists
+    const favorites = await AsyncStorage.getItem('@NewsApp:favorites');
+    if (favorites) {
+      const parsedFavorites = JSON.parse(favorites);
+      const found = parsedFavorites.find((item: News) => item.id === id);
+      if (found) return found;
+    }
+    return null;
+  } catch (error) {
+    console.error('Error fetching news by id:', error);
+    return null;
+  }
+}
+
 export const getCategories = () => [
   { id: 'all', name: 'Todas' },
   { id: 'general', name: 'Geral' },
@@ -91,4 +112,5 @@ export const getCategories = () => [
 export default {
   getNews,
   getCategories,
+  getNewsById,
 };

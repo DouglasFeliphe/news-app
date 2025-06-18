@@ -1,14 +1,14 @@
 export interface News {
-  id: string;
+  id?: string; // Make id optional since it might not exist initially
   title: string;
-  description: string;
-  content: string;
-  url: string;
-  urlToImage: string;
+  description: string | null;
+  content: string | null;
+  author: string | null;
   publishedAt: string;
-  author: string;
   source: {
     id: string | null;
     name: string;
   };
+  url: string;
+  urlToImage: string | null;
 }
