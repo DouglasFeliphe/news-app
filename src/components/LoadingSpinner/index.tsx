@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useRef } from 'react';
 import { Animated, Easing } from 'react-native';
 import { LoadingContainer, LoadingText, SpinnerContainer } from './styles';
+import { myTheme } from '@/theme/theme';
 
 export default function LoadingSpinner({
   text = 'Carregando...',
@@ -34,7 +35,7 @@ export default function LoadingSpinner({
     <LoadingContainer>
       <SpinnerContainer>
         <Animated.View style={{ transform: [{ rotate }] }}>
-          <Ionicons name="refresh" size={32} color="#10b981" />
+          <Ionicons name="refresh" size={32} color={myTheme.colors.success} />
         </Animated.View>
       </SpinnerContainer>
       <LoadingText>{text}</LoadingText>

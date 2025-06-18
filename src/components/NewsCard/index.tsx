@@ -24,6 +24,7 @@ import {
   Title,
   TitleContainer,
 } from './styles';
+import { myTheme } from '@/theme/theme';
 
 // const { width } = Dimensions.get('window');
 
@@ -65,7 +66,7 @@ const NewsCard = ({
           <ImageContainer
             style={{ justifyContent: 'center', alignItems: 'center' }}
           >
-            <Ionicons name="image" size={32} color="#64748b" />
+            <Ionicons name="image" size={32} color={myTheme.colors.textMuted} />
           </ImageContainer>
         )}
 
@@ -89,7 +90,7 @@ const NewsCard = ({
             <SourceText>{news.source.name}</SourceText>
           </SourceBadge>
           <DateContainer>
-            <Ionicons name="time" size={12} color="#64748b" />
+            <Ionicons name="time" size={12} color={myTheme.colors.textMuted} />
             <DateText>{formatDate(news.publishedAt)}</DateText>
           </DateContainer>
         </MetaContainer>
@@ -98,7 +99,11 @@ const NewsCard = ({
 
         <ReadMoreContainer>
           <ReadMoreText>Ler mais</ReadMoreText>
-          <Ionicons name="arrow-forward" size={12} color="#10b981" />
+          <Ionicons
+            name="arrow-forward"
+            size={14}
+            color={myTheme.colors.success}
+          />
         </ReadMoreContainer>
       </ContentContainer>
     </CardContainer>

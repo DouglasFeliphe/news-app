@@ -11,6 +11,7 @@ import {
   SearchInput,
   SearchInputContainer,
 } from './styles';
+import { myTheme } from '@/theme/theme';
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
@@ -46,7 +47,7 @@ export default function SearchBar({
           value={query}
           onChangeText={setQuery}
           placeholder={placeholder}
-          placeholderTextColor="#64748b"
+          placeholderTextColor={myTheme.colors.textMuted}
           onSubmitEditing={handleSearch}
           returnKeyType="search"
         />

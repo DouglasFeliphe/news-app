@@ -106,6 +106,7 @@ export const Description = styled.Text`
 export const ReadMoreContainer = styled.View`
   flex-direction: row;
   align-items: center;
+  justify-content: flex-end;
 `;
 
 export const ReadMoreText = styled.Text`

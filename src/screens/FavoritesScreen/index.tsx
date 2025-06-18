@@ -20,6 +20,7 @@ import {
 import { useFavorites } from '@/hooks/useFavorites';
 import { useFavoritesNavigation } from '@/hooks/useFavoritesNavigation';
 import { News } from '@/types/News';
+import { myTheme } from '@/theme/theme';
 
 export default function FavoritesScreen({ navigation }: any) {
   const { favorites, loading, refreshing, loadFavorites } = useFavorites();
@@ -47,7 +48,11 @@ export default function FavoritesScreen({ navigation }: any) {
     () => (
       <EmptyContainer>
         <EmptyCard>
-          <Ionicons name="heart-outline" size={64} color="#64748b" />
+          <Ionicons
+            name="heart-outline"
+            size={64}
+            color={myTheme.colors.textMuted}
+          />
           <EmptyTitle>Você ainda não tem notícias favoritas</EmptyTitle>
           <EmptyText>
             Explore nossa coleção de notícias e salve suas favoritas!
@@ -67,8 +72,8 @@ export default function FavoritesScreen({ navigation }: any) {
       <RefreshControl
         refreshing={refreshing}
         onRefresh={handleRefresh}
-        colors={['#10b981']}
-        tintColor="#10b981"
+        colors={[myTheme.colors.success]}
+        tintColor={myTheme.colors.success}
       />
     ),
     [refreshing, handleRefresh]

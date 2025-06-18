@@ -45,7 +45,7 @@ export function ListHeader({
               repeatReverse: true,
             }}
           >
-            <Ionicons name="flash" size={16} color={myTheme.colors.primary} />
+            <Ionicons name="flash" size={16} color={myTheme.colors.secondary} />
           </MotiView>
           <HeroMetaText>Atualizado em tempo real</HeroMetaText>
         </HeroMeta>

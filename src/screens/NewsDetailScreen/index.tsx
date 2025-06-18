@@ -28,6 +28,7 @@ import {
 } from './styles';
 import Toast from 'react-native-toast-message';
 import { useUrlHandler } from '@/hooks/useUrlHandler';
+import { myTheme } from '@/theme/theme';
 
 // const { width } = Dimensions.get('window');
 
@@ -120,7 +121,11 @@ export default function NewsDetailScreen({ route }: NewsDetailScreenProps) {
               </ReadFullButton>
 
               <SourceInfo>
-                <Ionicons name="person" size={14} color="#64748b" />
+                <Ionicons
+                  name="person"
+                  size={14}
+                  color={myTheme.colors.textMuted}
+                />
                 <SourceInfoText>Fonte: {news.source.name}</SourceInfoText>
               </SourceInfo>
             </FooterContainer>

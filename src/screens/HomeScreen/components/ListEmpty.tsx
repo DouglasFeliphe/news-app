@@ -1,5 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { EmptyContainer, EmptyText } from '../styles';
+import { myTheme } from '@/theme/theme';
 
 type ListEmptyProps = {
   loading: boolean;
@@ -13,7 +14,7 @@ export function ListEmpty({ loading, error, searchQuery }: ListEmptyProps) {
       <Ionicons
         name={error ? 'alert-circle-outline' : 'newspaper-outline'}
         size={64}
-        color="#64748b"
+        color={myTheme.colors.textMuted}
       />
       <EmptyText>
         {error ||

@@ -13,6 +13,7 @@ import {
 import type { Category } from '@/types/Category';
 import { Modal } from '../Modal';
 import { useModal } from '@/contexts/modal';
+import { myTheme } from '@/theme/theme';
 
 interface CategoryFilterProps {
   categories: Category[];
@@ -42,7 +43,11 @@ export default function CategoryFilter({
     <FilterContainer>
       <FilterButton onPress={() => openModal()}>
         <FilterButtonText>{getSelectedCategoryLabel()}</FilterButtonText>
-        <Ionicons name="chevron-down" size={20} color="#64748b" />
+        <Ionicons
+          name="chevron-down"
+          size={20}
+          color={myTheme.colors.textMuted}
+        />
       </FilterButton>
 
       <Modal>
@@ -53,7 +58,11 @@ export default function CategoryFilter({
             <CategoryItem onPress={() => handleCategorySelect(item.id)}>
               <CategoryText>{item.name}</CategoryText>
               {selectedCategory === item.id && (
-                <Ionicons name="checkmark" size={20} color="#10b981" />
+                <Ionicons
+                  name="checkmark"
+                  size={20}
+                  color={myTheme.colors.success}
+                />
               )}
             </CategoryItem>
           )}

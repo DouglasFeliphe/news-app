@@ -7,6 +7,7 @@ export const myTheme = {
     primary: '#8b5cf6',
     secondary: '#f59e0b',
     tertiary: '#06b6d4',
+    success: '#10b981',
     error: '#ef4444',
     text: '#f8fafc',
     textSecondary: '#cbd5e1',
