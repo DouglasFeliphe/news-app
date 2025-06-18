@@ -3,7 +3,7 @@ import { Dimensions, TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
 
 const { width } = Dimensions.get('window');
-const cardWidth = (width - 48) / 2 - 8;
+const cardWidth = width - 48;
 
 export const CardContainer = styled(TouchableOpacity)`
   background-color: ${({ theme }) => theme.colors.surface};

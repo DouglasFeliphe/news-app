@@ -1,12 +1,12 @@
 'use client';
 
+import { News } from '@/types/News';
+import { formatDate } from '@/utils/dateUtils';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { MotiView } from 'moti';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Dimensions } from 'react-native';
-import type { News } from '@/types/News';
-import { formatDate } from '@/utils/dateUtils';
+import FavoriteButton from '../FavoriteButton';
 import {
   CardContainer,
   ContentContainer,
@@ -25,20 +25,19 @@ import {
   Title,
   TitleContainer,
 } from './styles';
-import FavoriteButton from '../FavoriteButton';
 
-const { width } = Dimensions.get('window');
+// const { width } = Dimensions.get('window');
 
 interface NewsCardProps {
   news: News;
   showFavoriteButton?: boolean;
-  onRemoveFavorite?: (id: string) => void;
+  onFavoritePress?: (newsId: string) => void;
 }
 
 export default function NewsCard({
   news,
   showFavoriteButton = true,
-  onRemoveFavorite,
+  onFavoritePress,
 }: NewsCardProps) {
   const navigation = useNavigation();
   const [imageError, setImageError] = useState(false);
@@ -75,9 +74,9 @@ export default function NewsCard({
           <Title numberOfLines={2}>{news.title}</Title>
           {showFavoriteButton && (
             <FavoriteButton
-              newsId={news.id}
-              title={news.title}
-              onRemove={onRemoveFavorite}
+              news={news}
+              newsId={news.id ?? news.url}
+              onPress={onFavoritePress}
             />
           )}
         </TitleContainer>
