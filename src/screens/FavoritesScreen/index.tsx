@@ -19,6 +19,7 @@ import {
 } from './styles';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useFavoritesNavigation } from '@/hooks/useFavoritesNavigation';
+import { News } from '@/types/News';
 
 export default function FavoritesScreen({ navigation }: any) {
   const { favorites, loading, refreshing, loadFavorites } = useFavorites();
