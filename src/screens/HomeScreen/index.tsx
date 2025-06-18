@@ -1,26 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { FlatList, RefreshControl } from 'react-native';
+import CategoryFilter from '@/components/CategoryFilter';
+import Header from '@/components/Header';
+import LoadingSpinner from '@/components/LoadingSpinner';
+import NewsCard from '@/components/NewsCard';
+import SearchBar from '@/components/SearchBar';
+import { getNews } from '@/services/api';
+import { myTheme } from '@/theme/theme';
+import type { News } from '@/types/News';
 import { Ionicons } from '@expo/vector-icons';
 import { MotiView } from 'moti';
-import Header from '@/components/Header';
-import SearchBar from '@/components/SearchBar';
-import CategoryFilter from '@/components/CategoryFilter';
-import NewsCard from '@/components/NewsCard';
-import LoadingSpinner from '@/components/LoadingSpinner';
-import { getNews } from '@/services/api';
-import type { News } from '@/types/News';
+import { useEffect, useState } from 'react';
+import { FlatList, RefreshControl } from 'react-native';
 import {
   Container,
-  HeroSection,
-  HeroTitle,
-  HeroSubtitle,
-  HeroMeta,
-  HeroMetaText,
-  NewsGrid,
   EmptyContainer,
   EmptyText,
+  HeroMeta,
+  HeroMetaText,
+  HeroSection,
+  HeroSubtitle,
+  HeroTitle,
+  NewsGrid,
 } from './styles';
-import { myTheme } from '@/theme/theme';
 
 export default function HomeScreen() {
   const [news, setNews] = useState<News[]>([]);
@@ -31,43 +31,63 @@ export default function HomeScreen() {
   const [hasMore, setHasMore] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [totalResults, setTotalResults] = useState(0);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [error, setError] = useState<string | null>(null);
+  const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {
     let mounted = true;
 
     const fetchNews = async () => {
       setLoading(true);
+      setError(null);
       try {
-        const response = await getNews(category, 1);
+        const response = await getNews(category, 1, searchQuery);
         if (mounted) {
           setNews(response.articles);
           setTotalResults(response.totalResults);
-          setHasMore(response.articles.length < response.totalResults);
+          setHasMore(
+            response.articles.length > 0 &&
+              response.articles.length < response.totalResults
+          );
           setPage(1);
         }
       } catch (error) {
-        console.error(error);
+        if (mounted) {
+          setError(
+            error instanceof Error ? error.message : 'Erro ao carregar notícias'
+          );
+          setHasMore(false);
+        }
       } finally {
         if (mounted) {
           setLoading(false);
+          setIsSearching(false);
         }
       }
     };
 
-    fetchNews();
+    const debounceTimeout = setTimeout(fetchNews, 500);
 
     return () => {
       mounted = false;
+      clearTimeout(debounceTimeout);
     };
-  }, [category]);
+  }, [category, searchQuery]);
 
   const handleSearch = (query: string) => {
-    // Implement search functionality
+    setNews([]);
+    setSearchQuery(query);
+    setPage(1);
+    setHasMore(true);
+    setIsSearching(true);
+    setError(null);
   };
 
   const handleCategoryChange = (newCategory: string) => {
     setNews([]);
     setCategory(newCategory);
+    setSearchQuery(''); // Clear search when changing categories
     setPage(1);
     setHasMore(true);
   };
@@ -75,10 +95,13 @@ export default function HomeScreen() {
   const handleRefresh = async () => {
     setRefreshing(true);
     try {
-      const response = await getNews(category, 1);
+      const response = await getNews(category, 1, searchQuery);
       setNews(response.articles);
       setTotalResults(response.totalResults);
-      setHasMore(response.articles.length < response.totalResults);
+      setHasMore(
+        response.articles.length > 0 &&
+          response.articles.length < response.totalResults
+      );
       setPage(1);
     } catch (error) {
       console.error(error);
@@ -92,19 +115,22 @@ export default function HomeScreen() {
     setLoadingMore(true);
     try {
       const nextPage = page + 1;
-      const response = await getNews(category, nextPage);
+      const response = await getNews(category, nextPage, searchQuery);
 
       if (response.articles.length > 0) {
         setNews((prev) => [...prev, ...response.articles]);
         setPage(nextPage);
-        setHasMore(
-          news.length + response.articles.length < response.totalResults
-        );
+        setHasMore(news.length + response.articles.length < totalResults);
       } else {
         setHasMore(false);
       }
     } catch (error) {
-      console.error(error);
+      setError(
+        error instanceof Error
+          ? error.message
+          : 'Erro ao carregar mais notícias'
+      );
+      setHasMore(false);
     } finally {
       setLoadingMore(false);
     }
@@ -130,8 +156,17 @@ export default function HomeScreen() {
 
   const renderEmpty = () => (
     <EmptyContainer>
-      <Ionicons name="newspaper-outline" size={64} color="#64748b" />
-      <EmptyText>Nenhuma notícia encontrada</EmptyText>
+      <Ionicons
+        name={error ? 'alert-circle-outline' : 'newspaper-outline'}
+        size={64}
+        color="#64748b"
+      />
+      <EmptyText>
+        {error ||
+          (searchQuery
+            ? 'Nenhum resultado encontrado'
+            : 'Nenhuma notícia disponível')}
+      </EmptyText>
     </EmptyContainer>
   );
 
@@ -169,7 +204,11 @@ export default function HomeScreen() {
                       repeatReverse: true,
                     }}
                   >
-                    <Ionicons name="flash" size={16} color="#06b6d4" />
+                    <Ionicons
+                      name="flash"
+                      size={16}
+                      color={myTheme.colors.primary}
+                    />
                   </MotiView>
                   <HeroMetaText>Atualizado em tempo real</HeroMetaText>
                 </HeroMeta>
@@ -193,15 +232,15 @@ export default function HomeScreen() {
               refreshing={refreshing}
               onRefresh={handleRefresh}
               colors={[myTheme.colors.primary, myTheme.colors.tertiary]}
-              tintColor={myTheme.colors.primary}
+              tintColor={myTheme.colors.tertiary}
             />
           }
           onEndReached={handleLoadMore}
           onEndReachedThreshold={0.5}
-          ListEmptyComponent={renderEmpty}
           contentContainerStyle={{ paddingBottom: 20 }}
+          ListEmptyComponent={!loading && renderEmpty}
           ListFooterComponent={
-            hasMore ? (
+            loadingMore ? (
               <LoadingSpinner text="Carregando mais notícias..." />
             ) : null
           }

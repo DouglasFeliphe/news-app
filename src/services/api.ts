@@ -31,20 +31,30 @@ interface NewsAPIResponse {
 
 export async function getNews(
   category: string = 'all',
-  page: number = 1
+  page: number = 1,
+  searchQuery?: string
 ): Promise<{ articles: News[]; totalResults: number }> {
   try {
-    const params = {
+    let endpoint = '/top-headlines';
+    let params: any = {
       country: 'us',
-      // language: 'pt',
       pageSize: 10,
       page,
-      ...(category !== 'all' ? { category } : {}),
     };
 
-    const response = await api.get<NewsAPIResponse>('/top-headlines', {
-      params,
-    });
+    if (searchQuery) {
+      endpoint = '/everything';
+      params = {
+        q: searchQuery,
+        pageSize: 10,
+        page,
+        sortBy: 'publishedAt',
+      };
+    } else if (category !== 'all') {
+      params.category = category;
+    }
+
+    const response = await api.get<NewsAPIResponse>(endpoint, { params });
 
     console.table('response :', response.data);
 
