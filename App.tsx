@@ -1,3 +1,4 @@
+import { ModalProvider } from '@/contexts/modal';
 import FavoritesScreen from '@/screens/FavoritesScreen';
 import HomeScreen from '@/screens/HomeScreen';
 import NewsDetailScreen from '@/screens/NewsDetailScreen';
@@ -22,16 +23,18 @@ export default function App() {
       <SafeAreaView style={{ flex: 1 }} edges={['right', 'left']}>
         <NavigationContainer>
           <ThemeProvider theme={myTheme}>
-            <Stack.Navigator
-              screenOptions={{
-                headerShown: false,
-                animation: 'slide_from_right',
-              }}
-            >
-              <Stack.Screen name="Home" component={HomeScreen} />
-              <Stack.Screen name="NewsDetail" component={NewsDetailScreen} />
-              <Stack.Screen name="Favorites" component={FavoritesScreen} />
-            </Stack.Navigator>
+            <ModalProvider>
+              <Stack.Navigator
+                screenOptions={{
+                  headerShown: false,
+                  animation: 'slide_from_right',
+                }}
+              >
+                <Stack.Screen name="Home" component={HomeScreen} />
+                <Stack.Screen name="NewsDetail" component={NewsDetailScreen} />
+                <Stack.Screen name="Favorites" component={FavoritesScreen} />
+              </Stack.Navigator>
+            </ModalProvider>
           </ThemeProvider>
         </NavigationContainer>
         <Toast config={toastConfig} />

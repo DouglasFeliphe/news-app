@@ -1,20 +1,18 @@
 'use client';
 
 import { useState } from 'react';
-import { Modal, FlatList } from 'react-native';
+import { FlatList } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import {
   FilterContainer,
   FilterButton,
   FilterButtonText,
-  ModalContainer,
-  ModalContent,
-  ModalHeader,
-  ModalTitle,
   CategoryItem,
   CategoryText,
 } from './styles';
 import type { Category } from '@/types/Category';
+import { Modal } from '../Modal';
+import { useModal } from '@/contexts/modal';
 
 interface CategoryFilterProps {
   categories: Category[];
@@ -27,11 +25,11 @@ export default function CategoryFilter({
   selectedCategory,
   onCategoryChange,
 }: CategoryFilterProps) {
-  const [modalVisible, setModalVisible] = useState(false);
+  const { openModal, closeModal } = useModal();
 
   const handleCategorySelect = (category: string) => {
     onCategoryChange(category);
-    setModalVisible(false);
+    closeModal();
   };
 
   const getSelectedCategoryLabel = () => {
@@ -42,36 +40,24 @@ export default function CategoryFilter({
 
   return (
     <FilterContainer>
-      <FilterButton onPress={() => setModalVisible(true)}>
+      <FilterButton onPress={() => openModal()}>
         <FilterButtonText>{getSelectedCategoryLabel()}</FilterButtonText>
         <Ionicons name="chevron-down" size={20} color="#64748b" />
       </FilterButton>
 
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <ModalContainer>
-          <ModalContent>
-            <ModalHeader>
-              <ModalTitle>Selecionar Categoria</ModalTitle>
-            </ModalHeader>
-            <FlatList
-              data={categories}
-              keyExtractor={(item) => item.id}
-              renderItem={({ item }) => (
-                <CategoryItem onPress={() => handleCategorySelect(item.id)}>
-                  <CategoryText>{item.name}</CategoryText>
-                  {selectedCategory === item.id && (
-                    <Ionicons name="checkmark" size={20} color="#10b981" />
-                  )}
-                </CategoryItem>
+      <Modal>
+        <FlatList
+          data={categories}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <CategoryItem onPress={() => handleCategorySelect(item.id)}>
+              <CategoryText>{item.name}</CategoryText>
+              {selectedCategory === item.id && (
+                <Ionicons name="checkmark" size={20} color="#10b981" />
               )}
-            />
-          </ModalContent>
-        </ModalContainer>
+            </CategoryItem>
+          )}
+        />
       </Modal>
     </FilterContainer>
   );
