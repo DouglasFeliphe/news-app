@@ -45,12 +45,14 @@ export const SparkleIcon = styled(Ionicons)`
 
 export const ContentContainer = styled.View`
   padding: ${({ theme }) => theme.spacing.md}px;
+  /* gap: ${({ theme }) => theme.spacing.md}px; */
 `;
 
 export const TitleContainer = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: flex-start;
+  gap: ${({ theme }) => theme.spacing.sm}px;
   margin-bottom: ${({ theme }) => theme.spacing.sm}px;
 `;
 
@@ -107,6 +109,7 @@ export const ReadMoreContainer = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
+  margin-top: ${({ theme }) => theme.spacing.md}px;
 `;
 
 export const ReadMoreText = styled.Text`
