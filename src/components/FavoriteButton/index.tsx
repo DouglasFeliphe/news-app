@@ -112,7 +112,7 @@ const FavoriteButton = ({
         <Ionicons
           size={16}
           name={isFavorite ? 'heart' : 'heart-outline'}
-          color={isFavorite ? myTheme.colors.error : myTheme.colors.textMuted}
+          color={isFavorite ? myTheme.colors.error : myTheme.colors.error}
         />
       </ButtonComponent>
     </MotiView>
