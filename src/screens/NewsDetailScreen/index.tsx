@@ -3,14 +3,7 @@ import Header from '@/components/Header';
 import type { News } from '@/types/News';
 import { formatDate } from '@/utils/dateUtils';
 import { Ionicons } from '@expo/vector-icons';
-import {
-  Dimensions,
-  Linking,
-  ScrollView,
-  ActivityIndicator,
-  Alert,
-} from 'react-native';
-import { useState } from 'react';
+import { Dimensions, ScrollView, ActivityIndicator } from 'react-native';
 import {
   Container,
   Content,
@@ -34,8 +27,9 @@ import {
   TitleContainer,
 } from './styles';
 import Toast from 'react-native-toast-message';
+import { useUrlHandler } from '@/hooks/useUrlHandler';
 
-const { width } = Dimensions.get('window');
+// const { width } = Dimensions.get('window');
 
 interface NewsDetailScreenProps {
   route: {
@@ -47,32 +41,13 @@ interface NewsDetailScreenProps {
 
 export default function NewsDetailScreen({ route }: NewsDetailScreenProps) {
   const { news } = route.params;
-  const [isLoading, setIsLoading] = useState(false);
+  const { isLoading, handleUrlOpen } = useUrlHandler();
 
-  const handleReadFull = async () => {
-    try {
-      setIsLoading(true);
-      const supported = await Linking.canOpenURL(news.url);
+  const handleReadFull = () => handleUrlOpen(news.url);
 
-      if (supported) {
-        await Linking.openURL(news.url);
-      } else {
-        Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: 'Falha ao abrir a notícia. Verifique a URL.',
-        });
-      }
-    } catch (error) {
-      Toast.show({
-        type: 'error',
-        text1: 'Error',
-        text2: 'Falha ao abrir a notícia. Tente novamente mais tarde.',
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  if (!news.id || !news.title || !news.source) {
+    return null;
+  }
 
   return (
     <Container>
@@ -107,7 +82,7 @@ export default function NewsDetailScreen({ route }: NewsDetailScreenProps) {
           <ContentPadding>
             <TitleContainer>
               <Title>{news.title}</Title>
-              <FavoriteButton newsId={news.id} title={news.title} />
+              <FavoriteButton news={news} newsId={news.id} />
             </TitleContainer>
 
             {!news.urlToImage && (
