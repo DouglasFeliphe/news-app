@@ -4,8 +4,7 @@ import { News } from '@/types/News';
 import { formatDate } from '@/utils/dateUtils';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { useState } from 'react';
-import { Dimensions } from 'react-native';
+import { memo, useCallback, useState } from 'react';
 import FavoriteButton from '../FavoriteButton';
 import {
   CardContainer,
@@ -34,17 +33,21 @@ interface NewsCardProps {
   onFavoritePress?: (newsId: string) => void;
 }
 
-export default function NewsCard({
+const NewsCard = ({
   news,
   showFavoriteButton = true,
   onFavoritePress,
-}: NewsCardProps) {
+}: NewsCardProps) => {
   const navigation = useNavigation();
   const [imageError, setImageError] = useState(false);
 
-  const handlePress = () => {
+  const handlePress = useCallback(() => {
     navigation.navigate('NewsDetail' as never, { news } as never);
-  };
+  }, [navigation, news]);
+
+  const handleImageError = useCallback(() => {
+    setImageError(true);
+  }, []);
 
   return (
     <CardContainer onPress={handlePress} activeOpacity={0.8}>
@@ -53,7 +56,7 @@ export default function NewsCard({
           <>
             <NewsImage
               source={{ uri: news.urlToImage }}
-              onError={() => setImageError(true)}
+              onError={handleImageError}
               resizeMode="cover"
             />
             <ImageOverlay />
@@ -100,4 +103,6 @@ export default function NewsCard({
       </ContentContainer>
     </CardContainer>
   );
-}
+};
+
+export default memo(NewsCard);

@@ -2,7 +2,7 @@ import Header from '@/components/Header';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import NewsCard from '@/components/NewsCard';
 import { Ionicons } from '@expo/vector-icons';
-import { useEffect } from 'react';
+import { useEffect, useCallback, useMemo } from 'react';
 import { FlatList, RefreshControl } from 'react-native';
 import {
   Container,
@@ -37,23 +37,41 @@ export default function FavoritesScreen({ navigation }: any) {
     loadFavorites(true);
   };
 
-  const renderNewsItem = ({ item }: { item: News }) =>
-    item && <NewsCard news={item} showFavoriteButton />;
+  const renderNewsItem = useCallback(
+    ({ item }: { item: News }) =>
+      item && <NewsCard news={item} showFavoriteButton />,
+    []
+  );
 
-  const renderEmpty = () => (
-    <EmptyContainer>
-      <EmptyCard>
-        <Ionicons name="heart-outline" size={64} color="#64748b" />
-        <EmptyTitle>Você ainda não tem notícias favoritas</EmptyTitle>
-        <EmptyText>
-          Explore nossa coleção de notícias e salve suas favoritas!
-        </EmptyText>
-        <ExploreButton onPress={handleExplore} activeOpacity={0.8}>
-          <Ionicons name="flash" size={16} color="white" />
-          <ExploreButtonText>Explorar notícias</ExploreButtonText>
-        </ExploreButton>
-      </EmptyCard>
-    </EmptyContainer>
+  const renderEmpty = useCallback(
+    () => (
+      <EmptyContainer>
+        <EmptyCard>
+          <Ionicons name="heart-outline" size={64} color="#64748b" />
+          <EmptyTitle>Você ainda não tem notícias favoritas</EmptyTitle>
+          <EmptyText>
+            Explore nossa coleção de notícias e salve suas favoritas!
+          </EmptyText>
+          <ExploreButton onPress={handleExplore} activeOpacity={0.8}>
+            <Ionicons name="flash" size={16} color="white" />
+            <ExploreButtonText>Explorar notícias</ExploreButtonText>
+          </ExploreButton>
+        </EmptyCard>
+      </EmptyContainer>
+    ),
+    [handleExplore]
+  );
+
+  const refreshControl = useMemo(
+    () => (
+      <RefreshControl
+        refreshing={refreshing}
+        onRefresh={handleRefresh}
+        colors={['#10b981']}
+        tintColor="#10b981"
+      />
+    ),
+    [refreshing, handleRefresh]
   );
 
   if (loading) {
@@ -80,14 +98,7 @@ export default function FavoritesScreen({ navigation }: any) {
           renderItem={renderNewsItem}
           keyExtractor={(item) => item.id ?? ''}
           showsVerticalScrollIndicator={false}
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={handleRefresh}
-              colors={['#10b981']}
-              tintColor="#10b981"
-            />
-          }
+          refreshControl={refreshControl}
           ListEmptyComponent={renderEmpty}
           contentContainerStyle={{ paddingBottom: 20, flexGrow: 1 }}
         />

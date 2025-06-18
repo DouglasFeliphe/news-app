@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { memo, useState, useEffect, useCallback } from 'react';
 import { MotiView } from 'moti';
 import { Ionicons } from '@expo/vector-icons';
 import { useToast } from '@/hooks/use-toast';
@@ -20,14 +20,14 @@ interface FavoriteButtonProps {
   onToggle?: (isFavorited: boolean) => void; // Add this prop
 }
 
-export default function FavoriteButton({
+const FavoriteButton = ({
   news,
   newsId,
   isDisabled,
   onPress,
   onToggle,
   children,
-}: FavoriteButtonProps) {
+}: FavoriteButtonProps) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { showToast } = useToast();
@@ -36,7 +36,7 @@ export default function FavoriteButton({
     checkIfFavorite();
   }, [newsId]);
 
-  const checkIfFavorite = async () => {
+  const checkIfFavorite = useCallback(async () => {
     try {
       const favorites = await getFavorites();
       const currentId = newsId || encodeURIComponent(news.url);
@@ -49,9 +49,9 @@ export default function FavoriteButton({
       console.error('Error checking favorites:', error);
       setIsFavorite(false);
     }
-  };
+  }, [news.url, newsId]);
 
-  const toggleFavorite = async () => {
+  const toggleFavorite = useCallback(async () => {
     if (isLoading || isDisabled) return;
 
     setIsLoading(true);
@@ -82,7 +82,16 @@ export default function FavoriteButton({
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [
+    isLoading,
+    isDisabled,
+    isFavorite,
+    news,
+    newsId,
+    onPress,
+    onToggle,
+    showToast,
+  ]);
 
   const ButtonComponent = isFavorite
     ? FavoriteButtonActive
@@ -108,4 +117,6 @@ export default function FavoriteButton({
       </ButtonComponent>
     </MotiView>
   );
-}
+};
+
+export default memo(FavoriteButton);
