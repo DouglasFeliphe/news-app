@@ -63,14 +63,14 @@ export default function FavoritesScreen({ navigation }: any) {
     return unsubscribe;
   }, [navigation, loadFavorites]);
 
-  const handleRemoveFavorite = async (id: string) => {
-    try {
-      await removeFromFavorites(id);
-      await loadFavorites(); // Reload the entire list
-    } catch (error) {
-      console.error('Error removing favorite:', error);
-    }
-  };
+  // const handleRemoveFavorite = async (id: string) => {
+  //   try {
+  //     await removeFromFavorites(id);
+  //     await loadFavorites(); // Reload the entire list
+  //   } catch (error) {
+  //     console.error('Error removing favorite:', error);
+  //   }
+  // };
 
   const handleRefresh = () => {
     loadFavorites(true);
@@ -84,7 +84,7 @@ export default function FavoritesScreen({ navigation }: any) {
     item && (
       <NewsCard
         news={item}
-        onRemoveFavorite={handleRemoveFavorite}
+        // onRemoveFavorite={handleRemoveFavorite}
         showFavoriteButton
       />
     );
@@ -127,7 +127,7 @@ export default function FavoritesScreen({ navigation }: any) {
         <FlatList
           data={favorites}
           renderItem={renderNewsItem}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.id ?? ''}
           // numColumns={1}
           showsVerticalScrollIndicator={false}
           refreshControl={
