@@ -31,7 +31,7 @@ export const SearchInput = styled.TextInput`
 `;
 
 export const SearchButton = styled(TouchableOpacity)`
-  background-color: ${({ theme }) => theme.colors.tertiary};
+  background-color: ${({ theme }) => theme.colors.success};
   border-radius: ${({ theme }) => theme.borderRadius.md}px;
   padding: ${({ theme }) => theme.spacing.sm}px
     ${({ theme }) => theme.spacing.md}px;

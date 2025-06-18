@@ -49,21 +49,21 @@ export default function Header({ showBackButton = false, title }: HeaderProps) {
         ) : (
           <LogoContainer>
             <LogoIconContainer>
-              <Ionicons
-                name="newspaper"
-                size={32}
-                color={myTheme.colors.primary}
-              />
               <MotiView
-                from={{ opacity: 0, translateY: 5 }}
-                animate={{ opacity: 1, translateY: 0 }}
+                from={{ opacity: 0, scale: 0.5 }}
+                animate={{ opacity: 1, scale: 1.5 }}
                 transition={{
                   type: 'spring',
-                  duration: 800,
+                  duration: 1000,
                   loop: true,
-                  repeatReverse: false,
+                  repeatReverse: true,
                 }}
               >
+                <Ionicons
+                  name="newspaper"
+                  size={32}
+                  color={myTheme.colors.primary}
+                />
                 <SparkleIcon
                   name="flash"
                   size={16}
