@@ -1,10 +1,8 @@
 import Header from '@/components/Header';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import NewsCard from '@/components/NewsCard';
-import { getFavorites, removeFromFavorites } from '@/services/favoritesService';
-import type { News } from '@/types/News';
 import { Ionicons } from '@expo/vector-icons';
-import { useCallback, useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { FlatList, RefreshControl } from 'react-native';
 import {
   Container,
@@ -19,41 +17,12 @@ import {
   HeroTitle,
   NewsGrid,
 } from './styles';
+import { useFavorites } from '@/hooks/useFavorites';
+import { useFavoritesNavigation } from '@/hooks/useFavoritesNavigation';
 
 export default function FavoritesScreen({ navigation }: any) {
-  const [favorites, setFavorites] = useState<News[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
-
-  const loadFavorites = useCallback(async (refresh = false) => {
-    try {
-      if (refresh) {
-        setRefreshing(true);
-      } else {
-        setLoading(true);
-      }
-
-      const favoritedNews = await getFavorites();
-      console.log('Loading favorites:', {
-        count: favoritedNews.length,
-        favorites: favoritedNews,
-      });
-
-      // Filter out any null or invalid entries
-      const validNews = favoritedNews.filter(
-        (item): item is News =>
-          item !== null &&
-          typeof item === 'object' &&
-          typeof item.url === 'string'
-      );
-      setFavorites(validNews);
-    } catch (error) {
-      console.error('Error loading favorites:', error);
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  }, []);
+  const { favorites, loading, refreshing, loadFavorites } = useFavorites();
+  const { handleExplore } = useFavoritesNavigation(navigation);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -63,31 +32,12 @@ export default function FavoritesScreen({ navigation }: any) {
     return unsubscribe;
   }, [navigation, loadFavorites]);
 
-  // const handleRemoveFavorite = async (id: string) => {
-  //   try {
-  //     await removeFromFavorites(id);
-  //     await loadFavorites(); // Reload the entire list
-  //   } catch (error) {
-  //     console.error('Error removing favorite:', error);
-  //   }
-  // };
-
   const handleRefresh = () => {
     loadFavorites(true);
   };
 
-  const handleExplore = () => {
-    navigation.navigate('Home');
-  };
-
   const renderNewsItem = ({ item }: { item: News }) =>
-    item && (
-      <NewsCard
-        news={item}
-        // onRemoveFavorite={handleRemoveFavorite}
-        showFavoriteButton
-      />
-    );
+    item && <NewsCard news={item} showFavoriteButton />;
 
   const renderEmpty = () => (
     <EmptyContainer>
@@ -128,7 +78,6 @@ export default function FavoritesScreen({ navigation }: any) {
           data={favorites}
           renderItem={renderNewsItem}
           keyExtractor={(item) => item.id ?? ''}
-          // numColumns={1}
           showsVerticalScrollIndicator={false}
           refreshControl={
             <RefreshControl
