@@ -14,41 +14,36 @@ import {
   CategoryItem,
   CategoryText,
 } from './styles';
-
-const categories = [
-  { value: 'all', label: 'Todas as categorias' },
-  { value: 'business', label: 'Negócios' },
-  { value: 'entertainment', label: 'Entretenimento' },
-  { value: 'health', label: 'Saúde' },
-  { value: 'science', label: 'Ciência' },
-  { value: 'sports', label: 'Esportes' },
-  { value: 'technology', label: 'Tecnologia' },
-];
+import type { Category } from '@/types/Category';
 
 interface CategoryFilterProps {
-  selectedCategory?: string;
+  categories: Category[];
+  selectedCategory: string;
   onCategoryChange: (category: string) => void;
 }
 
 export default function CategoryFilter({
+  categories,
   selectedCategory,
   onCategoryChange,
 }: CategoryFilterProps) {
   const [modalVisible, setModalVisible] = useState(false);
 
-  const selectedLabel =
-    categories.find((cat) => cat.value === selectedCategory)?.label ||
-    'Todas as categorias';
-
   const handleCategorySelect = (category: string) => {
-    onCategoryChange(category === 'all' ? '' : category);
+    onCategoryChange(category);
     setModalVisible(false);
+  };
+
+  const getSelectedCategoryLabel = () => {
+    return (
+      categories.find((cat) => cat.id === selectedCategory)?.name || 'Todas'
+    );
   };
 
   return (
     <FilterContainer>
       <FilterButton onPress={() => setModalVisible(true)}>
-        <FilterButtonText>{selectedLabel}</FilterButtonText>
+        <FilterButtonText>{getSelectedCategoryLabel()}</FilterButtonText>
         <Ionicons name="chevron-down" size={20} color="#64748b" />
       </FilterButton>
 
@@ -65,12 +60,11 @@ export default function CategoryFilter({
             </ModalHeader>
             <FlatList
               data={categories}
-              keyExtractor={(item) => item.value}
+              keyExtractor={(item) => item.id}
               renderItem={({ item }) => (
-                <CategoryItem onPress={() => handleCategorySelect(item.value)}>
-                  <CategoryText>{item.label}</CategoryText>
-                  {(selectedCategory === item.value ||
-                    (selectedCategory === '' && item.value === 'all')) && (
+                <CategoryItem onPress={() => handleCategorySelect(item.id)}>
+                  <CategoryText>{item.name}</CategoryText>
+                  {selectedCategory === item.id && (
                     <Ionicons name="checkmark" size={20} color="#10b981" />
                   )}
                 </CategoryItem>
