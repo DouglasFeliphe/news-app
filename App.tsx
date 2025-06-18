@@ -1,15 +1,14 @@
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import { ThemeProvider } from 'styled-components/native';
-import Toast, { BaseToast, ErrorToast } from 'react-native-toast-message';
+import FavoritesScreen from '@/screens/FavoritesScreen';
 import HomeScreen from '@/screens/HomeScreen';
 import NewsDetailScreen from '@/screens/NewsDetailScreen';
-import FavoritesScreen from '@/screens/FavoritesScreen';
 import { myTheme } from '@/theme/theme';
-import React from 'react';
 import { toastConfig } from '@/theme/toastConfig';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import Toast from 'react-native-toast-message';
+import { ThemeProvider } from 'styled-components/native';
 
 const Stack = createNativeStackNavigator();
 
