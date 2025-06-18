@@ -27,18 +27,23 @@ export default function HomeScreen() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [category, setCategory] = useState<string | undefined>();
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [totalResults, setTotalResults] = useState(0);
 
   useEffect(() => {
     let mounted = true;
 
-    console.log(' rendered:');
     const fetchNews = async () => {
       setLoading(true);
       try {
-        const response = await getNews(category);
-        console.log('response :', response);
+        const response = await getNews(category, 1);
         if (mounted) {
           setNews(response.articles);
+          setTotalResults(response.totalResults);
+          setHasMore(response.articles.length < response.totalResults);
+          setPage(1);
         }
       } catch (error) {
         console.error(error);
@@ -61,22 +66,48 @@ export default function HomeScreen() {
   };
 
   const handleCategoryChange = (newCategory: string) => {
+    setNews([]);
     setCategory(newCategory);
+    setPage(1);
+    setHasMore(true);
   };
 
   const handleRefresh = async () => {
     setRefreshing(true);
     try {
-      const response = await getNews(category);
+      const response = await getNews(category, 1);
       setNews(response.articles);
+      setTotalResults(response.totalResults);
+      setHasMore(response.articles.length < response.totalResults);
+      setPage(1);
     } catch (error) {
       console.error(error);
     }
     setRefreshing(false);
   };
 
-  const handleLoadMore = () => {
-    // Implement load more functionality
+  const handleLoadMore = async () => {
+    if (loadingMore || !hasMore || loading) return;
+
+    setLoadingMore(true);
+    try {
+      const nextPage = page + 1;
+      const response = await getNews(category, nextPage);
+
+      if (response.articles.length > 0) {
+        setNews((prev) => [...prev, ...response.articles]);
+        setPage(nextPage);
+        setHasMore(
+          news.length + response.articles.length < response.totalResults
+        );
+      } else {
+        setHasMore(false);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoadingMore(false);
+    }
   };
 
   const renderNewsItem = ({ item, index }: { item: News; index: number }) => (
@@ -108,13 +139,7 @@ export default function HomeScreen() {
     return (
       <Container>
         <Header />
-        <MotiView
-          from={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ type: 'timing', duration: 500 }}
-        >
-          <LoadingSpinner text="Carregando notícias..." />
-        </MotiView>
+        <LoadingSpinner text="Carregando notícias..." />
       </Container>
     );
   }
@@ -161,7 +186,7 @@ export default function HomeScreen() {
           data={news}
           renderItem={renderNewsItem}
           keyExtractor={(item) => item.id}
-          numColumns={2}
+          numColumns={1}
           showsVerticalScrollIndicator={false}
           refreshControl={
             <RefreshControl
@@ -175,6 +200,11 @@ export default function HomeScreen() {
           onEndReachedThreshold={0.5}
           ListEmptyComponent={renderEmpty}
           contentContainerStyle={{ paddingBottom: 20 }}
+          ListFooterComponent={
+            hasMore ? (
+              <LoadingSpinner text="Carregando mais notícias..." />
+            ) : null
+          }
         />
       </NewsGrid>
     </Container>
